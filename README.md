@@ -1,0 +1,2 @@
+# Kayze-
+Mergen (İ,bağlayıcı)
