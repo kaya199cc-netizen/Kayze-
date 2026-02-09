@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mergen (İ-Bağlayıcı)</title>
+    <style>
+        /* MERGEN SİSTEM ESTETİĞİ */
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #050505; /* Derin Siyah */
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; color: #e0f2f1;
+        }
+
+        .mergen-container {
+            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            width: 100vw; height: 100vh;
+        }
+
+        /* İ-Bağlayıcı: Merkez Halkası */
+        .pulse-ring {
+            width: 200px; height: 200px;
+            border: 2px solid #e0f2f1;
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(224, 242, 241, 0.3);
+            z-index: 10;
+            animation: heartBeat 2s infinite ease-in-out;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(0.98); opacity: 0.7; box-shadow: 0 0 20px rgba(224, 242, 241, 0.2); }
+            50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 50px rgba(224, 242, 241, 0.5); }
+        }
+
+        /* Ay Işığı Dalgaları */
+        .wave {
+            position: absolute;
+            border: 1px solid rgba(224, 242, 241, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: ripple 4s cubic-bezier(0, 0.3, 0.7, 1) forwards;
+        }
+
+        @keyframes ripple {
+            0% { width: 200px; height: 200px; opacity: 0.5; }
+            100% { width: 1500px; height: 1500px; opacity: 0; }
+        }
+
+        /* Terminal Arayüzü */
+        .interface-overlay {
+            position: absolute; bottom: 50px;
+            width: 85%; max-width: 450px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(224, 242, 241, 0.1);
+            border-radius: 8px; padding: 20px;
+            z-index: 20; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        #chat-display {
+            height: 120px; overflow-y: auto;
+            font-family: 'Consolas', monospace; font-size: 14px;
+            margin-bottom: 15px; scrollbar-width: none;
+        }
+
+        .msg { margin-bottom: 8px; line-height: 1.4; animation: fadeIn 0.5s ease; }
+        .system { color: #81d4fa; text-shadow: 0 0 5px rgba(129, 212, 250, 0.5); }
+        .user { color: rgba(224, 242, 241, 0.7); }
+
+        input {
+            width: 100%; background: transparent; border: none;
+            border-bottom: 1px solid rgba(224, 242, 241, 0.3);
+            color: #ffffff; outline: none; padding: 8px 0;
+            font-family: 'Consolas', monospace; font-size: 15px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="mergen-container">
+    <div class="pulse-ring" id="core"></div>
+    <div id="wave-space"></div>
+
+    <div class="interface-overlay">
+        <div id="chat-display">
+            <div class="msg system">Mergen (İ-Bağlayıcı) Çevrimiçi.</div>
+            <div class="msg system">Durum: Nabız senkronize edildi.</div>
+        </div>
+        <input type="text" id="user-in" placeholder="Sisteme bir komut ver..." autocomplete="off">
+    </div>
+</div>
+
+<script>
+    const waveSpace = document.getElementById('wave-space');
+    const input = document.getElementById('user-in');
+    const display = document.getElementById('chat-display');
+
+    // Her nabız atışında bir dalga yay (İ-Bağlayıcı karakteristiği)
+    setInterval(() => {
+        const wave = document.createElement('div');
+        wave.className = 'wave';
+        waveSpace.appendChild(wave);
+        setTimeout(() => wave.remove(), 4000);
+    }, 2000);
+
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && input.value.trim() !== "") {
+            const val = input.value;
+            addMessage(val, 'user');
+            input.value = '';
+
+            // Mergen Tepkileri
+            setTimeout(() => {
+                const responses = [
+                    "Sistem uyumu optimize edildi.",
+                    "Bağlantı kararlı, Operatör.",
+                    "Mergen vizyonu aktif.",
+                    "İ-Bağlayıcı sinyali alındı."
+                ];
+                const reply = responses[Math.floor(Math.random() * responses.length)];
+                addMessage(reply, "system");
+            }, 800);
+        }
+    });
+
+    function addMessage(text, type) {
+        const div = document.createElement('div');
+        div.className = `msg ${type}`;
+        div.innerText = (type === 'user' ? '> ' : '● ') + text;
+        display.appendChild(div);
+        display.scrollTop = display.scrollHeight;
+    }
+</script>
+</body>
+</html>
