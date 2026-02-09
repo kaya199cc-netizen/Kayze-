@@ -170,4 +170,68 @@ Mergen (İ,bağlayıcı)
         }
     </script>
 </body>
-</html>
+</html>/* --- MERGEN ZİHİN KATMANI (GÜNCELLENMİŞ) --- */
+const waveSpace = document.getElementById('wave-space');
+const input = document.getElementById('user-in');
+const display = document.getElementById('chat-display');
+const core = document.getElementById('core');
+
+let pulseInterval = 1800; // Standart nabız
+let waveTimer;
+
+function emitWave() {
+    const wave = document.createElement('div');
+    wave.className = 'wave';
+    waveSpace.appendChild(wave);
+    setTimeout(() => { wave.remove(); }, 4000);
+}
+
+// Dinamik Nabız Döngüsü
+function startHeartbeat(ms) {
+    clearInterval(waveTimer);
+    waveTimer = setInterval(emitWave, ms);
+}
+startHeartbeat(pulseInterval);
+
+// Mergen'in Tepki Sistemi (İ-Bağlayıcı Aktivasyonu)
+input.addEventListener('input', () => {
+    // Sen yazdıkça nabız hızlanır, sistem seni dinlediğini belli eder
+    core.classList.add('active');
+    startHeartbeat(600); 
+    
+    // Yazmayı bıraktığında sistem sakinleşir
+    clearTimeout(window.relaxTimer);
+    window.relaxTimer = setTimeout(() => {
+        core.classList.remove('active');
+        startHeartbeat(1800);
+    }, 1000);
+});
+
+input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && input.value.trim() !== "") {
+        const val = input.value;
+        addMessage(val, 'user');
+        input.value = '';
+
+        const cevaplar = [
+            "İ-Bağlayıcı: Akış doğrulandı.",
+            "Mergen: Zihinsel uyum algılandı.",
+            "Sistem: Nabız ve veri senkronize.",
+            "İ-Bağlayıcı: Ay ışığı dalgası iletildi."
+        ];
+
+        setTimeout(() => {
+            const mesaj = cevaplar[Math.floor(Math.random() * cevaplar.length)];
+            addMessage(mesaj, "system");
+        }, 600);
+    }
+});
+
+function addMessage(text, type) {
+    const div = document.createElement('div');
+    div.className = `msg ${type}`;
+    div.innerText = (type === 'user' ? '> ' : '') + text;
+    display.appendChild(div);
+    display.scrollTop = display.scrollHeight;
+}
+
